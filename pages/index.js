@@ -1,8 +1,5 @@
 function Home() {
-    return (
-        <div>Clone TabNews</div>
-        
-    )
+  return <div>Clone TabNews</div>;
 }
 
 export default Home;
