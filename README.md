@@ -1,3 +1,3 @@
-# clone-tabnews
+# dev-challenges
 
-Implementação do tabnews para o curso.dev
+Implementação para o curso.dev
