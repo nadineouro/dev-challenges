@@ -41,7 +41,12 @@ function Home() {
             padding: "20px 0 40px",
           }}
         >
-          <Image src="/images/traffic-barrier.png" width={256} height={256} />
+          <Image
+            src="/images/traffic-barrier.png"
+            alt="Imagem de barreira de trânsito"
+            width={256}
+            height={256}
+          />
           <span
             style={{
               fontSize: 28,
