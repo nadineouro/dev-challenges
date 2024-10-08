@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "../styles/reset.css";
 
 export default function MyApp({ Component, pageProps }) {
@@ -26,6 +27,7 @@ export default function MyApp({ Component, pageProps }) {
         <title>devchallenges</title>
       </Head>
       <Component {...pageProps} />
+      <SpeedInsights />
     </>
   );
 }
