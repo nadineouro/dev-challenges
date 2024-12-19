@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "../styles/reset.css";
+import "../styles/theme.css";
 
 export default function MyApp({ Component, pageProps }) {
   return (
