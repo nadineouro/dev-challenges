@@ -17,7 +17,18 @@ const Container = ({ children }) => {
       }}
     >
       <Header />
-      {children}
+      <main
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          padding: "2%",
+        }}
+      >
+        {children}
+      </main>
       <Footer />
     </div>
   );
