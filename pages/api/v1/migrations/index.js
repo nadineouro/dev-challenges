@@ -1,44 +1,42 @@
+import { createRouter } from "next-connect";
 import migrationRunner from "node-pg-migrate";
 import { resolve } from "node:path";
 import database from "infra/database";
+import controller from "infra/controller";
 
-const ALLOWED_METHODS = ["POST", "GET"];
+const router = createRouter();
+router.get(getHandler);
+router.post(postHandler);
 
-export default async function migrations(request, response) {
-  if (!ALLOWED_METHODS.includes(request.method)) {
-    return response.status(405).json(`Method ${request.method} not allowed`);
+export default router.handler(controller.errorHandlers);
+
+async function getHandler(request, response) {
+  const pendingMigrations = await runMigrations();
+  return response.status(200).json(pendingMigrations);
+}
+
+async function postHandler(request, response) {
+  const migratedMigrations = await runMigrations({ dryRun: false });
+  if (migratedMigrations.length > 0) {
+    return response.status(201).json(migratedMigrations);
   }
+  return response.status(200).json(migratedMigrations);
+}
 
+async function runMigrations({ dryRun = true } = {}) {
   let dbClient;
   try {
     dbClient = await database.getNewClient();
-    const defaultMigrationOptions = {
+
+    const response = await migrationRunner({
       dbClient,
-      dryRun: true,
+      dryRun,
       dir: resolve("infra", "migrations"),
       direction: "up",
       verbose: true,
       migrationsTable: "pgmigrations",
-    };
-
-    if (request.method === "GET") {
-      const pendingMigrations = await migrationRunner(defaultMigrationOptions);
-      return response.status(200).json(pendingMigrations);
-    }
-
-    if (request.method === "POST") {
-      const migratedMigrations = await migrationRunner({
-        ...defaultMigrationOptions,
-        dryRun: false,
-      });
-
-      if (migratedMigrations.length > 0) {
-        return response.status(201).json(migratedMigrations);
-      }
-      return response.status(200).json(migratedMigrations);
-    }
-  } catch (error) {
-    return response.status(500).json({ error });
+    });
+    return response;
   } finally {
     await dbClient.end();
   }
